@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <title>Python 講座 - アカウントページ</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 20px;
+        background-color: #b2d8d8;
+        margin: 0;
+        padding: 0;
+      }
+      .form-container {
+        max-width: 800px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh; /* Adjust as needed */
+      }
+      .user-data {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+      }
+      .user-data p {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="navbar-brand" href="#">アカウントページ</div> 
+      <div class="collapse navbar-collapse">
+          <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <a class="nav-link" href={% url "accounts:stageselect" %}>ステージ選択</a>
+              </li>
+          </ul>
+      </div>
+    </nav>
+    <div class="container form-container">
+      <h2 class="text-center">アカウント情報</h2>
+      <table class="table">
+        <tr>
+          <th>ユーザー名</th>
+          <td>{{ object.username }}</td>
+        </tr>
+        <tr>
+          <th>年齢 / 誕生日</th>
+          <td>
+            <div class="user-data">
+              <p>{{ object.age }}</p>
+              <p>{{ object.birth_date }}</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th>ステージクリア数</th>
+          <td>{{ object.stage_cleart}}</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

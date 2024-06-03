@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>jQuery実践</title>
+<style>
+    body {
+        background-color: rgb(197, 173, 173);
+        color: white;
+    }
+    
+    h1 {
+        text-align: center;
+    }
+    
+    h2 {
+        text-align: center;
+    }
+        
+    p {
+        text-align: center;
+    }
+
+    .rollover {
+        border: 3px solid red; /* 3px幅の赤い枠線を追加 */
+    }
+</style>
+</head>
+<body>
+  <h1>スタート</h1>
+  <h1>⇩</h1>
+  <div class="container">
+    {% load static %}
+    <img src="{% static 'img/img_off.jpg' %}" width="705" height="600" alt="お菓子作り" class="rollover">
+    <img src="{% static 'img/img_off.jpg' %}" width="690" height="600" alt="お菓子作り" class="rollover">
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script>
+$(function() {
+    var counter = 0; // カウンターの初期化
+
+    $(".rollover").on("mouseover",function() {
+        var onImg = $(this).attr("src");
+        onImg = onImg.replace("_off", "_on");
+        $(this).attr("src", onImg);
+
+        counter++; // 画像が変わるたびにカウンターを増やす
+        $('#counter').text("画像が変わった回数: " + counter); // カウンターの値を表示
+    });
+
+    $(".rollover").on("mouseout",function() {
+        var offImg = $(this).attr("src");
+        offImg = offImg.replace("_on", "_off");
+        $(this).attr("src", offImg);
+    });
+
+    $("h2").on('mouseenter', function(){
+        alert("おめでとう！ スコア: " + counter);
+        window.location.href = "http://127.0.0.1:8000/accounts/stageselect";
+    });
+});
+  </script>
+
+<h2>ゴール！</h2>
+<p id="counter">画像が変わった回数: 0</p>
+</body>
+</html>

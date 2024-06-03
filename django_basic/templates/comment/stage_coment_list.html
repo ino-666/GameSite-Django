@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Python 講座</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 20px;
+            background-color: #b2d8d8; /* 薄い水色 */
+            margin: 0;
+            padding: 0;
+
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+
+        }
+        .comment-section {
+            border: 2px solid #007bff; /* Added for border color */
+            padding: 20px;
+            border-radius: 5px; /* Added for rounded corners */
+            margin-top: 20px;
+        }
+        .comment {
+            border: 1px solid #ddd; /* Added for border */
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px; /* Added for rounded corners */
+            height: auto; /* Added for automatic height adjustment */
+            background-color: #C0C0C0; /* Added for background color */
+        }
+        .comment-author {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .comment-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 70px;  // 画像のサイズに合わせて調整してください
+            height: 70px;  // 画像のサイズに合わせて調整してください
+        }
+        
+        .comment-button:hover {
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="navbar-brand" href="#">コメントページ</div> 
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                  <a class="nav-link" href={% url "accounts:stageselect" %}>ステージ選択</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container comment-section">
+      <h2 class="text-center">みんなの声</h2>
+      {% for comment in comments %}
+      <div class="comment">
+          <div class="comment-author">{{ comment.author }}</div>
+          <div class="comment-text">{{ comment.text }}</div>
+          <div class="comment-date">{{ comment.date }}</div>
+  
+          <!-- ここにボタンを追加 -->
+          {% if request.user == comment.author %}
+              <button><a href={% url "accounts:comment_delete" comment.pk %}>削除</a></button>
+          {% endif %}
+      </div>
+      {% endfor %}
+  
+      <!-- コメントの記入ボタン -->
+      <a href={% url "accounts:comment_new" %}>
+        {% load static %}
+        <img src="{% static 'img/commentkaku.png' %}" class="comment-button" alt="コメントを書く">
+    </a>
+    
+  </div>
+</body>
+</html>

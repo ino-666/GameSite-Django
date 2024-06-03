@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        body {
+            background-color: rgb(152, 162, 165); /* 背景色の設定 */
+            color: white; /* テキスト色の設定 */
+        }
+        
+        #myButton {
+            position: absolute; /* ボタンの位置を絶対位置に設定 */
+            left: 50%; /* 左から50%の位置に配置 */
+            top: 50%; /* 上から50%の位置に配置 */
+            transform: translate(-50%, -50%); /* 位置調整のための変換 */
+        
+            /* ボタンを円形にし、サイズを大きくするための設定 */
+            width: 50px;  /* 幅の設定 */
+            height: 50px; /* 高さの設定 */
+            border-radius: 50%; /* ボタンを円形にするための設定 */
+            font-size: 20px; /* ボタン内テキストのサイズ調整 */
+            text-align: center; /* テキストを中央寄せにする */
+            line-height: 50px; /* テキストを垂直方向に中央寄せにする（heightと一致させる） */
+        }
+        
+        .randomButton {
+            position: absolute; /* ボタンの位置を絶対位置に設定 */
+            left: 50%; /* 左から50%の位置に配置 */
+            top: 50%; /* 上から50%の位置に配置 */
+            transform: translate(-50%, -50%); /* 位置調整のための変換 */
+        
+            /* ボタンを円形にし、サイズを大きくするための設定 */
+            width: 50px;  /* 幅の設定 */
+            height: 50px; /* 高さの設定 */
+            border-radius: 50%; /* ボタンを円形にするための設定 */
+            font-size: 20px; /* ボタン内テキストのサイズ調整 */
+            text-align: center; /* テキストを中央寄せにする */
+            line-height: 50px; /* テキストを垂直方向に中央寄せにする（heightと一致させる） */
+        }
+        
+        #startText {
+            position: absolute; /* テキストの位置を絶対位置に設定 */
+            top: 20%; /* 上から20%の位置に配置 */
+            left: 50%; /* 左から50%の位置に配置 */
+            transform: translate(-50%, -50%); /* 位置調整のための変換 */
+            font-size: 60px; /* フォントサイズの設定 */
+            text-align: center; /* テキストを中央寄せにする */
+            /* 必要に応じて他のスタイルを追加 */
+        }
+    </style>
+    <button id="myButton">☆</button> <!-- ボタンを設置 -->
+    <div id="startText">よーい</div> <!-- スタートテキストを設置 -->
+    <script>
+        var button = document.getElementById('myButton'); // ボタン要素を取得
+        var startText = document.getElementById('startText'); // スタートテキスト要素を取得
+        var loadTime; // ページの読み込み時間を格納する変数
+        var userId = {{ user.id }};
+
+
+
+        //正解のボタンに関する処理
+        button.onmouseover = function(event) { // ボタンにカーソルが乗った時の動作
+            event.preventDefault();
+
+            setTimeout(function(){
+                var randomX = Math.random() * (window.innerWidth - button.offsetWidth);
+                var randomY = Math.random() * (window.innerHeight - button.offsetHeight);
+                button.style.left = randomX + 'px'; // ボタンのX座標をランダムに設定、位置替えはcssの値を変更にすることによって可能にしている
+                button.style.top = randomY + 'px'; // ボタンのY座標をランダムに設定
+            }, 90);
+        }
+
+        //ゲームクリアの処理
+        button.onclick = function(event) { 
+            event.preventDefault();
+            var clickTime = new Date().getTime();
+            var timeElapsed = (clickTime - loadTime)/1000; 
+            alert('クリック成功！ 記録は ' + timeElapsed + ' 秒!'); 
+        
+            // stage_cleart を増やす処理を追加
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'increase_stage_clear/', true);
+            xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xhr.send('id=' + userId); // ここで必要な id を送信する
+            
+            window.location.href = "http://127.0.0.1:8000/accounts/stageselect"; 
+        }
+
+        //はずれのボタンに関する処理,この関数は下のsetTimeoutから３秒ごとに呼び出されている
+        function addRandomButtonEveryThreeSeconds() { // 3秒ごとにランダムボタンを追加する関数
+            setInterval(function() {
+                var randomButton = document.createElement("button"); // ボタンを作成
+                randomButton.innerText = "☆"; // ボタンのテキストを設定
+                randomButton.className = "randomButton"; // ボタンにクラスを付与
+                var randomX = Math.random() * (window.innerWidth - randomButton.offsetWidth);
+                var randomY = Math.random() * (window.innerHeight - randomButton.offsetHeight);
+                randomButton.style.left = randomX + 'px'; // ボタンのX座標をランダムに設定
+                randomButton.style.top = randomY + 'px'; // ボタンのY座標をランダムに設定
+                randomButton.style.display = "block"; // ボタンを表示
+                randomButton.onclick = function(event) { // ボタンがクリックされた時の動作
+                    event.preventDefault();
+                    alert('はずれ～🤣🤣🤣'); // はずれのアラート
+                }
+                document.body.appendChild(randomButton); // ボタンを画面に追加
+            }, 2000);
+        }
+        
+        //最初に出てくる「よーい、スタート！」を表示させるための処理
+        window.onload = function() { // ページ読み込み時の動作
+            startText.style.display = "block"; // スタートテキストを表示
+            setTimeout(function() {
+                startText.textContent = "スタート！"; // スタートテキストを変更
+                loadTime = new Date().getTime(); // ページ読み込み時間を取得
+                setTimeout(function() {
+                    startText.style.display = "none"; // スタートテキストを非表示
+                    addRandomButtonEveryThreeSeconds(); // 3秒ごとにランダムボタンを追加する関数を呼び出し
+                }, 1000);
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

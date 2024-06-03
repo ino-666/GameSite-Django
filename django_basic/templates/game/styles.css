@@ -1,0 +1,44 @@
+body {
+    background-color: rgb(152, 162, 165); /* 背景色の設定 */
+    color: white; /* テキスト色の設定 */
+}
+
+#myButton {
+    position: absolute; /* ボタンの位置を絶対位置に設定 */
+    left: 50%; /* 左から50%の位置に配置 */
+    top: 50%; /* 上から50%の位置に配置 */
+    transform: translate(-50%, -50%); /* 位置調整のための変換 */
+
+    /* ボタンを円形にし、サイズを大きくするための設定 */
+    width: 50px;  /* 幅の設定 */
+    height: 50px; /* 高さの設定 */
+    border-radius: 50%; /* ボタンを円形にするための設定 */
+    font-size: 20px; /* ボタン内テキストのサイズ調整 */
+    text-align: center; /* テキストを中央寄せにする */
+    line-height: 50px; /* テキストを垂直方向に中央寄せにする（heightと一致させる） */
+}
+
+.randomButton {
+    position: absolute; /* ボタンの位置を絶対位置に設定 */
+    left: 50%; /* 左から50%の位置に配置 */
+    top: 50%; /* 上から50%の位置に配置 */
+    transform: translate(-50%, -50%); /* 位置調整のための変換 */
+
+    /* ボタンを円形にし、サイズを大きくするための設定 */
+    width: 50px;  /* 幅の設定 */
+    height: 50px; /* 高さの設定 */
+    border-radius: 50%; /* ボタンを円形にするための設定 */
+    font-size: 20px; /* ボタン内テキストのサイズ調整 */
+    text-align: center; /* テキストを中央寄せにする */
+    line-height: 50px; /* テキストを垂直方向に中央寄せにする（heightと一致させる） */
+}
+
+#startText {
+    position: absolute; /* テキストの位置を絶対位置に設定 */
+    top: 20%; /* 上から20%の位置に配置 */
+    left: 50%; /* 左から50%の位置に配置 */
+    transform: translate(-50%, -50%); /* 位置調整のための変換 */
+    font-size: 60px; /* フォントサイズの設定 */
+    text-align: center; /* テキストを中央寄せにする */
+    /* 必要に応じて他のスタイルを追加 */
+}

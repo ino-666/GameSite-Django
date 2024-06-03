@@ -1,0 +1,139 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>ステージ選択ページ</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 20px;
+            background-color: #b2d8d8; 
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            border-top: 10px solid #b2d8d8;
+            border-bottom: 10px solid white;
+        }
+        .stage-img {
+            width: 500px;
+            height: 500px;
+            border: 2px solid transparent;
+            margin: auto;
+            display: block;
+        }
+        .stage-btn:hover {
+            border: 2px solid #FFD700;
+        }
+        .stage-img:hover {
+            border: 2px solid #FFD700;
+        }
+        .stage-selection {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 70vh; /* viewport height */
+        }
+        .stage-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .stage-btn-left {
+            left: 0;
+        }
+        .stage-btn-right {
+            right: 0;
+        }
+        .stage-text{
+            font-size: 2em; 
+        }
+        .comment-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 70px;  // 画像のサイズに合わせて調整してください
+            height: 70px;  // 画像のサイズに合わせて調整してください
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="#">ステージ選択ページ</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url "accounts:accounts_detail" request.user.id %}">マイアカウント</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href={% url "accounts:logout" %}>ログアウト</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <h2 class="text-center">ステージ選択</h2>
+        <div class="stage-selection">
+            <img id="prevStage" class="stage-btn stage-btn-left" src="{% static 'img/left.png' %}" alt="Prev">
+            <a id="stage-link" href={% url "accounts:stage1" %}>
+                {% load static %}
+                <img id="stage-img" class="stage-img" src="{% static 'img/stage1.png' %}" alt="stage1">
+            </a>
+            <img id="nextStage" class="stage-btn stage-btn-right" src="{% static 'img/right.png' %}" alt="Next">
+        </div>
+    </div>
+    <div class="container text-center" style="display: flex; justify-content: center; align-items: center;">
+        <div id="stage-description" class="stage-text">ステージ1 :伝説の始まり</div>
+    </div>
+    <a href={% url "accounts:comment_list" %} >
+        <img src="{% static 'img/comment.png' %}" alt="攻略へのリンク" class="comment-button">
+    </a>
+    <!-- Bootstrap JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var stages = [
+            { url: "{% url 'accounts:stage1' %}", img: "{% static 'img/numbers/1open.png' %}", description: "ステージ1　：伝説の始まり", stage_clears: 0 },
+            { url: "{% url 'accounts:stage2' %}", img: "{% static 'img/numbers/2open.png' %}", img_locked: "{% static 'img/numbers/2close.png' %}", description: "ステージ2　：決戦の地", stage_clears: 1 },
+            { url: "{% url 'accounts:home' %}", img: "{% static 'img/numbers/3open.png' %}", img_locked: "{% static 'img/numbers/3close.png' %}", description: "ステージ3　：そして伝説へ。。。", stage_clears: 2 }
+            ];
+            var currentStage = 0;
+            var stage_cleart = {{ request.user.stage_cleart }};  // Djangoのモデルからstage_cleartの値を取得
+        
+            function updateStage() {
+                $('#stage-link').attr('href', stages[currentStage].url);
+                if (stages[currentStage].stage_clears > stage_cleart) {
+                    // アクセスできない場合は、未解放ステージの画像を表示
+                    $('#stage-img').attr('src', stages[currentStage].img_locked);
+                } else {
+                    // アクセスできる場合は、通常のステージ画像を表示
+                    $('#stage-img').attr('src', stages[currentStage].img);
+                }
+                $('#stage-description').text(stages[currentStage].description);
+            }
+            updateStage();
+        
+            $('#nextStage').click(function() {
+                currentStage = (currentStage + 1) % stages.length;
+                updateStage();
+                });
+
+            $('#prevStage').click(function() {
+            currentStage = (currentStage - 1 + stages.length) % stages.length;
+                updateStage();
+                });
+        
+            $('#stage-link').click(function(e) {
+                if (stages[currentStage].stage_clears > stage_cleart) {
+                    e.preventDefault();
+                    alert(`ステージ${stages[currentStage].stage_clears}をクリアしてね！`);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
